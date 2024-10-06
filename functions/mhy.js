@@ -78,11 +78,11 @@ export async function onRequestPost(context) {  // Contents of context object
     let res = new Response(fileName+'upload error1, check your environment params!'+targetUrl, { status: 400 });
     try {
         const response = await fetch(targetUrl, {
-            method: 'post',
+            method: 'POST',
             headers: {
-            'Content-Type': 'image/jpeg',
-	    }
-            body: file,
+            	'Content-Type': 'image/jpeg',
+	    },
+            body: file
         });
 
         // 若上传成功，将响应返回给客户端
@@ -97,9 +97,9 @@ export async function onRequestPost(context) {  // Contents of context object
         }else{
 	   res=new Response('状态码', { status: response.status });
 	}	
-    } catch (error) {
-        console.error('Error:', error);
-    } finally {
+     } catch (error) {
+         console.error('Error:', error);
+     } finally {
         return res;
     }
 }
