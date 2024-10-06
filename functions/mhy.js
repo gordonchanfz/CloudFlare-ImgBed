@@ -78,9 +78,10 @@ export async function onRequestPost(context) {  // Contents of context object
     let res = new Response(fileName+'upload error1, check your environment params!'+targetUrl, { status: 400 });
     try {
         const response = await fetch(targetUrl, {
-            method: clonedRequest.method,
+            method: 'post',
             headers: {
             'Content-Type': 'image/jpeg',
+	    }
             body: file,
         });
 
