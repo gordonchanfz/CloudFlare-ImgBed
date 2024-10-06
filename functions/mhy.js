@@ -1,4 +1,5 @@
 import { errorHandling, telemetryData } from "./utils/middleware";
+
 function UnauthorizedException(reason) {
     return new Response(reason, {
         status: 401,
@@ -36,13 +37,10 @@ export async function onRequestPost(context) {  // Contents of context object
 
     await errorHandling(context);
     telemetryData(context);
-	
-   // 从 request.body 直接读取文件数据
-    const file = await clonedRequest.blob();  // 使用 blob 读取文件内容
-    
+
     // 优先从请求 URL 获取 authCode
     let authCode = url.searchParams.get('authCode');
-   // 如果 URL 中没有 authCode，从 Referer 中获取
+    // 如果 URL 中没有 authCode，从 Referer 中获取
     if (!authCode) {
         const referer = request.headers.get('Referer');
         if (referer) {
@@ -69,36 +67,55 @@ export async function onRequestPost(context) {  // Contents of context object
         return new UnauthorizedException("error");
     }
 
-    const response = await fetch('https://video-oss.vercel.app/link', {
-            method: 'GET'
-        });
-    const targetUrl = await response.text();  
-  
-    let res = new Response('upload error1, check your environment params!', { status: 400 });
+    // 从 request.body 直接读取文件数据
+    console.log('开始读取文件')
+    //表单形式读取数据
+    const formdata = await clonedRequest.formData();
+    const file=formdata.get('file')
+    if (!file) {
+        return new Response('No file uploaded', { status: 400 });
+    }
+    const fileType = formdata.get('file').type;
+    const fileName = formdata.get('file').name;
+    console.log('文件类型: '+fileType)
+    console.log('文件名: '+fileName)
+
+    console.log('读取文件结束')
+
+    const response = await fetch('https://b.baipiao.wiki/link', {
+        method: 'GET'
+    });
+    const targetUrl = await response.text();
+
+    console.log('mhy: '+targetUrl)
+
+    let res = new Response('upload error, check your environment params!', { status: 400 });
     try {
         const response = await fetch(targetUrl, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
-            	'Content-Type': 'image/jpeg',
-	    },
-            body: file
+                'Content-Type': 'image/jpeg',
+            },
+            body: file.stream(),  // 使用文件流发送请求
         });
 
         // 若上传成功，将响应返回给客户端
         if (response.ok) {
             res = new Response(
-                JSON.stringify([{ 'mhyUrl': targetUrl }]), 
+                JSON.stringify({ 'mhyURL': targetUrl }),
                 {
                     status: 200,
                     headers: { 'Content-Type': 'application/json' }
                 }
             );
         }else{
-	   res=new Response('状态码', { status: response.status });
-	}	
-     } catch (error) {
-         console.error('Error:', error);
-     } finally {
+            console.log('response.ok is false')
+            console.log(res)
+            res=new Response('response.status!', { status: 597 });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    } finally {
         return res;
     }
 }
