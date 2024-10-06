@@ -82,7 +82,7 @@ export async function onRequestPost(context) {  // Contents of context object
 
     console.log('读取文件结束')
 
-    const response = await fetch('https://b.baipiao.wiki/link', {
+    const response = await fetch('https://video-oss.vercel.app/link', {
         method: 'GET'
     });
     const targetUrl = await response.text();
