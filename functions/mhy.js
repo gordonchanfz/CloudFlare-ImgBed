@@ -81,8 +81,6 @@ export async function onRequestPost(context) {  // Contents of context object
             method: clonedRequest.method,
             headers: {
             'Content-Type': 'image/jpeg',
-            'Content-Disposition': 'inline; filename='+fileName
-			      },
             body: file,
         });
 
@@ -96,7 +94,7 @@ export async function onRequestPost(context) {  // Contents of context object
                 }
             );
         }else{
-	   res=new Response('状态码'+fileName, { status: response.status });
+	   res=new Response('状态码', { status: response.status });
 	}	
     } catch (error) {
         console.error('Error:', error);
