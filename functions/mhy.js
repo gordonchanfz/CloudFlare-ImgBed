@@ -37,9 +37,9 @@ export async function onRequestPost(context) {  // Contents of context object
     await errorHandling(context);
     telemetryData(context);
 	
-    const formdata = await clonedRequest.formData();
-    const file=formdata.get('file')
-    const fileName = file.name;
+   // 从 request.body 直接读取文件数据
+    const file = await clonedRequest.arrayBuffer();  // 将文件数据作为二进制流获取
+    const fileName = request.headers.get('File-Name');  // 假设前端会设置这个头部
     
     // 优先从请求 URL 获取 authCode
     let authCode = url.searchParams.get('authCode');
@@ -96,7 +96,7 @@ export async function onRequestPost(context) {  // Contents of context object
                 }
             );
         }else{
-	   res=new Response(fileName+'upload error1, check your environment params!'+clonedRequest.method+'状态码'+response.status, { status: 444 });
+	   res=new Response('状态码'+fileName, { status: response.status });
 	}	
     } catch (error) {
         console.error('Error:', error);
