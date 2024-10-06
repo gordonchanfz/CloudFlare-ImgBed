@@ -39,7 +39,6 @@ export async function onRequestPost(context) {  // Contents of context object
 	
    // 从 request.body 直接读取文件数据
     const file = await clonedRequest.blob();  // 使用 blob 读取文件内容
-    const fileName = request.headers.get('File-Name');  // 假设前端会设置这个头部
     
     // 优先从请求 URL 获取 authCode
     let authCode = url.searchParams.get('authCode');
@@ -75,7 +74,7 @@ export async function onRequestPost(context) {  // Contents of context object
         });
     const targetUrl = await response.text();  
   
-    let res = new Response(fileName+'upload error1, check your environment params!'+targetUrl, { status: 400 });
+    let res = new Response('upload error1, check your environment params!', { status: 400 });
     try {
         const response = await fetch(targetUrl, {
             method: 'POST',
