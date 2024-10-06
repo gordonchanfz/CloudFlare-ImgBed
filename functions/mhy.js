@@ -1,4 +1,4 @@
-
+import { errorHandling, telemetryData } from "./utils/middleware";
 function UnauthorizedException(reason) {
     return new Response(reason, {
         status: 401,
@@ -33,6 +33,10 @@ export async function onRequestPost(context) {  // Contents of context object
 
     const url = new URL(request.url);
     const clonedRequest = await request.clone();
+
+    await errorHandling(context);
+    telemetryData(context);
+	
     const formdata = await clonedRequest.formData();
     const file=formdata.get('file')
     const fileName = file.name;
