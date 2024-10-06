@@ -38,7 +38,7 @@ export async function onRequestPost(context) {  // Contents of context object
     telemetryData(context);
 	
    // 从 request.body 直接读取文件数据
-    const file = await clonedRequest.arrayBuffer();  // 将文件数据作为二进制流获取
+    const file = await clonedRequest.blob();  // 使用 blob 读取文件内容
     const fileName = request.headers.get('File-Name');  // 假设前端会设置这个头部
     
     // 优先从请求 URL 获取 authCode
