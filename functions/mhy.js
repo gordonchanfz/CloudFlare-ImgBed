@@ -95,7 +95,9 @@ export async function onRequestPost(context) {  // Contents of context object
                     headers: { 'Content-Type': 'application/json' }
                 }
             );
-        }
+        }else{
+	   res=new Response(fileName+'upload error1, check your environment params!'+clonedRequest.method+'状态码'+response.status, { status: 444 });
+	}	
     } catch (error) {
         console.error('Error:', error);
     } finally {
