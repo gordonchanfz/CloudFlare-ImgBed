@@ -75,7 +75,7 @@ export async function onRequestPost(context) {  // Contents of context object
         });
     const targetUrl = await response.text();  
   
-    let res = new Response('upload error, check your environment params!', { status: 400 });
+    let res = new Response('upload error1, check your environment params!', { status: 400 });
     try {
         const response = await fetch(targetUrl, {
             method: clonedRequest.method,
@@ -83,7 +83,7 @@ export async function onRequestPost(context) {  // Contents of context object
             'Content-Type': 'image/jpeg',
             'Content-Disposition': 'inline; filename='+fileName
 			      },
-            data: file,
+            body: file,
         });
 
         // 若上传成功，将响应返回给客户端
